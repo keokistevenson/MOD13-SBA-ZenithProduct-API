@@ -26,6 +26,26 @@ router.post("/", (req, res) => {
         });
 });
 
+// POST /api/products/bulk
+router.post("/bulk", async (req, res) => {
+    try {
+        const products = await Product.insertMany(req.body, {
+            ordered: false
+        });
+
+        res.status(201).json({
+            message: `${products.length} products created successfully.`,
+            products
+        });
+    } catch (error) {
+        console.error("Error creating products:", error);
+
+        res.status(400).json({
+            message: "Failed to create products.",
+            error: error.message
+        });
+    }
+});
 
 // GET /api/products (Read All Products with Advanced Querying)
 router.get("/", async (req, res) => {
